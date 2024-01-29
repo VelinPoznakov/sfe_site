@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        /* Custom styles for the navbar */
+        #navi {
+            background-color: #0400ff; /* Dark blue background color */
+        }
+
+        .navbar-dark .navbar-nav .nav-link,
+        .navbar-dark .navbar-brand {
+            color: #000000 !important; /* Black text color */
+        }
+
+        .facebook-icon i {
+          color: #4267B2; /* Facebook brand color */
+      }
+      
+      .instagram-icon i {
+          background: -webkit-linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+          background-clip: text;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent; /* Instagram gradient color */
+      }
+
+      .navbar{
+        background-color: chartreuse;
+      }
+      
+    </style>
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+    <nav id='navi', class="navbar navbar-expand-xl navbar-dark">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    
+        <!-- Collapsible content -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <!-- Centered links -->
+            <ul class="navbar-nav mx-auto justify-content-center">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'home' %}">Home</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'about-us' %}">About Us</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'contact-us' %}">Contact Us</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    
+    
+    <nav class="navbar navbar-expand-xl navbar-dark">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    
+        <!-- Collapsible content -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <!-- Centered links with space between -->
+            <ul class="navbar-nav mx-auto justify-content-between">
+                <li class="nav-item mr-5"> <!-- Added right margin here -->
+                    <a class="nav-link" href="#">Support</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Working time</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    
+    
+
+  <main class="flex-grow-1">
+    {% block content %}
+    {% endblock %}
+  </main>
+
+
+
+<!-- Bootstrap JS and Popper.js (required for the navbar toggle functionality) -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+</body>
+</html>

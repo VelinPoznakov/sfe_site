@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Suppoort{% endblock %}
+
+
+
+{% block content %}
+
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
+
+    <form action="{% url 'support' %}" method="post" class="mx-auto" style="max-width: 1138px;">
+      <h1>Support page</h1><br>
+
+      {% csrf_token %}
+
+      {{ form.name }}
+      {% if form.name.errors %}
+          <div class="text-danger">{{ form.name.errors.0 }}</div>
+      {% endif %}<br>
+
+      {{ form.email }}
+      {% if form.email.errors %}
+          <div class="text-danger">{{ form.email.errors.0 }}</div>
+      {% endif %}<br>
+
+      {{ form.phone_number }}
+      {% if form.phone_number.errors %}
+          <div class="text-danger">{{ form.phone_number.errors.0 }}</div>
+      {% endif %}<br>
+
+      {{ form.comment_field }}
+      {% if form.comment_field.errors %}
+          <div class="text-danger">{{ form.comment_field.errors.0 }}</div>
+      {% endif %}<br>
+
+      <button class="btn btn-success">Send</button>
+
+    </form>
+
+{% endblock %}
