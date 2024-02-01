@@ -75,9 +75,13 @@ WSGI_APPLICATION = 'sfe.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "sfe",
+        "USER": "postgres",
+        "PASSWORD": "Stanimir-6!",
+        "HOST": "localhost",
+        "PORT": "5432",
     }
 }
 
@@ -122,3 +126,15 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'poznakovvelin@gmail.com'
+EMAIL_HOST_PASSWORD = 'wqox idbq cnnr qbjt'
+
+PASSWORD_RESET_TIMEOUT = 14400
+
+AUTH_USER_MODEL = 'sfe_app.CustomUser'
+
