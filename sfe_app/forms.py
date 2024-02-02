@@ -1,8 +1,8 @@
 from django import forms
-from phonenumber_field.modelfields import PhoneNumberField
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
 from sfe_app.models import *
 from phonenumber_field.formfields import PhoneNumberField
-from phonenumber_field.widgets import PhoneNumberInternationalFallbackWidget
 from phonenumber_field.phonenumber import to_python
 from django.contrib.auth.forms import UserCreationForm
 
@@ -80,9 +80,24 @@ class RegistrationForm(UserCreationForm):
         super(RegistrationForm, self).__init__(*args, **kwargs)
 
         self.fields['username'].required = False
+        self.fields['username'].label = ''
+        self.fields['username'].widget.attrs['class'] = 'form-control'
+        self.fields['username'].widget.attrs['placeholder'] = 'Enter username'
+        
         self.fields['email'].required = False
+        self.fields['email'].label = ''
+        self.fields['email'].widget.attrs['class'] = 'form-control'
+        self.fields['email'].widget.attrs['placeholder'] = 'Enter an email'
+        
         self.fields['password1'].required = False
+        self.fields['password1'].label = ''
+        self.fields['password1'].widget.attrs['class'] = 'form-control'
+        self.fields['password1'].widget.attrs['placeholder'] = 'Enter password'
+        
         self.fields['password2'].required = False
+        self.fields['password2'].label = ''
+        self.fields['password2'].widget.attrs['class'] = 'form-control'
+        self.fields['password2'].widget.attrs['placeholder'] = 'Confirm your password'
 
     def clean_username(self):
         username = self.cleaned_data['username']
@@ -118,8 +133,48 @@ class RegistrationForm(UserCreationForm):
             self.add_error('email', 'This email is already in use. Please choose another email.')
 
         return email
+    
+    def clean_password1(self):
+        password1 = self.cleaned_data['password1']
+        
+        if not password1 or password1 is None:
+            self.add_error('password1', 'You should enter password')
+            
+        if len(password1) < 8:
+            self.add_error('password1', 'Password must be at least 8 characters')
+            
+        return password1
+    
+    def clean_password2(self):
+        password1 = self.cleaned_data['password1']
+        password2 = self.cleaned_data['password2']
+        
+        if not password2 or password2 is None:
+            self.add_error('password2', 'You must confirm the password')
+            
+        if password1 != password2:
+            self.add_error('password2', 'The two passwords do not match')
+            
+        return password2
+    
+    
+class LogInForm(forms.Form):
+    username = forms.CharField(max_length=50, label='', required=False,
+                               widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter username'}))
+    password = forms.CharField(max_length=128, label='', required=False, widget=forms.PasswordInput(
+        attrs={'class': 'form-control', 'placeholder': 'Enter password'}))
 
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        if not username:
+            self.add_error('username', 'You must enter a username')
 
-class ResendActivationLinkForm(forms.Form):  # remake
-    email = forms.EmailField(label='Your email address', max_length=100, help_text='Enter the email address you used '
-                                                                                   'for registration.')
+        return username
+
+    def clean_password(self):
+        password = self.cleaned_data.get('password')
+
+        if not password:
+            self.add_error('password', 'You must enter a password')
+
+        return password

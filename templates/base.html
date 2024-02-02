@@ -23,8 +23,8 @@
       
       .instagram-icon i {
           background: -webkit-linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
-          background-clip: text;
           -webkit-background-clip: text;
+          background-clip: text;
           -webkit-text-fill-color: transparent; /* Instagram gradient color */
       }
 
@@ -54,9 +54,17 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'contact-us' %}">Contact Us</a>
                 </li>
+                
                 {% if user.is_authenticated %}
                     <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
                         <a class="nav-link" href="{% url 'register' %}">Register</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">Log In</a>
                     </li>
                 {% endif %}
             </ul>
