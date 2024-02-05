@@ -68,7 +68,6 @@ def register(request):
             })
             email = EmailMessage(mail_subject, message, to=[form.cleaned_data.get('email')])
             if email.send():
-                print('success')
                 return redirect('home')
     else:
         form = RegistrationForm()

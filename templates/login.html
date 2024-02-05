@@ -13,25 +13,32 @@
             </div>
         {% endfor %}
     {% endif %}
-    
-    <form action="{% url 'login' %}" method="post" class="mx-auto" style="max-width: 1138px;">
-        <h1>Log In!</h1>
-        {% csrf_token %}
 
-        {{ form.username.label_tag }}
-        {{ form.username }}
-        {% if form.username.errors %}
-            <div class="text-danger">{{ form.username.errors.0 }}</div>
-        {% endif %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <form action="{% url 'login' %}" method="post" class="mx-auto" style="width: 100%;">
+                    <h1>Log In!</h1>
+                    {% csrf_token %}
 
-        {{ form.password.label_tag }}
-        {{ form.password }}
-        {% if form.password.errors %}
-            <div class="text-danger">{{ form.password.errors.0 }}</div>
-        {% endif %}<br>
-    
-        <h6>If you don't have an account, create one <a href="{% url 'register' %}">Here</a></h6>
-        <button type="submit" class="btn btn-primary">Log In</button>
-    </form>
+                    {{ form.username.label_tag }}
+                    {{ form.username }}
+                    {% if form.username.errors %}
+                        <div class="text-danger">{{ form.username.errors.0 }}</div>
+                    {% endif %}
+
+                    {{ form.password.label_tag }}
+                    {{ form.password }}
+                    {% if form.password.errors %}
+                        <div class="text-danger">{{ form.password.errors.0 }}</div>
+                    {% endif %}<br>
+
+                    <h6>If you don't have an account, create one <a href="{% url 'register' %}">Here</a></h6>
+                    <button type="submit" class="btn btn-primary">Log In</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
     
 {% endblock %}

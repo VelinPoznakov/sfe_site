@@ -13,40 +13,44 @@
       </ul>
     {% endif %}
 
-    <form action="{% url 'register' %}" method="post" class="mx-auto" style="max-width: 1138px;">
-        <h1>Register</h1>
-        {% csrf_token %}
-        
-        {{ form.username.label_tag }}
-        {{ form.username }}
-        {% if form.username.errors %}
-          <div class="text-danger">{{ form.username.errors.0 }}</div>
-        {% endif %}
-    
-        {{ form.email.label_tag }}
-        {{ form.email }}
-        {% if form.email.errors %}
-          <div class="text-danger">{{ form.email.errors.0 }}</div>
-        {% endif %}
-    
-        {{ form.password1.label_tag }}
-        {{ form.password1 }}
-        {% if form.password1.errors %}
-          <div class="text-danger">{{ form.password1.errors.0 }}</div>
-        {% endif %}<br>
-    
-        {{ form.password2.abel_tag }}
-        {{ form.password2 }}
-        {% if form.password2.errors %}
-          <div class="text-danger">{{ form.password2.errors.0 }}</div>
-        {% endif %}<br>
-    
-    
-        <h6>If you have already an account, <a href="{% url 'login' %}">click Here</a></h6>
-        <button type="submit" class="btn btn-primary">Register</button><br>
-
-        
-    </form>
+     <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <form action="{% url 'register' %}" method="post" class="mx-auto" style="width: 100%;">
+                    <h1>Register</h1>
+                    {% csrf_token %}
+                    
+                    {{ form.username.label_tag }}
+                    {{ form.username }}
+                    {% if form.username.errors %}
+                      <div class="text-danger">{{ form.username.errors.0 }}</div>
+                    {% endif %}
+                
+                    {{ form.email.label_tag }}
+                    {{ form.email }}
+                    {% if form.email.errors %}
+                      <div class="text-danger">{{ form.email.errors.0 }}</div>
+                    {% endif %}
+                
+                    {{ form.password1.label_tag }}
+                    {{ form.password1 }}
+                    {% if form.password1.errors %}
+                      <div class="text-danger">{{ form.password1.errors.0 }}</div>
+                    {% endif %}
+                
+                    {{ form.password2.label_tag }}
+                    {{ form.password2 }}
+                    {% if form.password2.errors %}
+                      <div class="text-danger">{{ form.password2.errors.0 }}</div>
+                    {% endif %}<br>
+                
+                
+                    <h6>If you have already an account, <a href="{% url 'login' %}">click Here</a></h6>
+                    <button type="submit" class="btn btn-primary">Register</button><br>
+                </form>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 

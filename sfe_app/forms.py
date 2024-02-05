@@ -12,7 +12,8 @@ class SupportForm(forms.ModelForm):
                            widget=forms.TextInput(attrs={'placeholder': 'Enter your name', 'class': 'form-control'}))
     email = forms.EmailField(required=False, widget=forms.EmailInput(
         attrs={'placeholder': 'Enter your email address', 'class': 'form-control'}))
-    phone_number = PhoneNumberField()
+    phone_number = PhoneNumberField(widget=forms.TextInput(attrs={
+        'class': 'form-control'}))
     comment_field = forms.CharField(required=False, widget=forms.Textarea(
         attrs={'placeholder': 'Your comment', 'class': 'form-control'}))
 
