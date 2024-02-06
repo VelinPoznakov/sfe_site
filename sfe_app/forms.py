@@ -179,3 +179,38 @@ class LogInForm(forms.Form):
             self.add_error('password', 'You must enter a password')
 
         return password
+
+
+class AddVideoForm(forms.ModelForm):
+    class Meta:
+        model = AddVideoModel
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super(AddVideoForm, self).__init__(*args, **kwargs)
+
+        self.fields['name'].required = False
+        self.fields['name'].label = ''
+        self.fields['name'].widget.attrs['class'] = 'form-control'
+        self.fields['name'].widget.attrs['placeholder'] = 'Enter the name of the video'
+
+        self.fields['video'].required = False
+        self.fields['video'].label = ''
+        self.fields['video'].widget.attrs['placeholder'] = 'Select the video file'
+        self.fields['video'].widget.attrs['class'] = 'form-control'
+
+    def clean_name(self):
+        name = self.cleaned_data['name']
+
+        if name is None or not name:
+            self.add_error('name', 'You should enter the name of the video')
+
+        return name
+
+    def clean_video(self):
+        video = self.cleaned_data['video']
+
+        if video is None or not video:
+            self.add_error('video', 'You should upload video')
+
+        return video

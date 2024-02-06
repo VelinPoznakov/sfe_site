@@ -1,3 +1,4 @@
+from django.contrib.auth.models import Group
 from django.core.mail import EmailMessage
 from sfe_app.forms import *
 from django.contrib import messages
@@ -10,14 +11,22 @@ from .models import CustomUser
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 
 
 # Create your views here.
 
-def home(request):
-    return render(request, 'home.html')
 
+def home(request):
+    video = AddVideoModel.objects.last()  # This will be None if no videos exist
+    # Check if video exists and it has an associated file by checking the name attribute
+    video_url = video.video.url if video and video.video.name else None
+
+    context = {
+        'video_url': video_url,
+        'video': video  # Pass the video object to use other attributes like 'name'
+    }
+    return render(request, 'home.html', context)
 
 def about(request):
     return render(request, 'about.html')
@@ -25,6 +34,10 @@ def about(request):
 
 def contact(request):
     return render(request, 'contact.html')
+
+
+def is_superuser(user):
+    return user.is_authenticated and user.is_superuser
 
 
 @login_required(redirect_field_name='login', login_url='login')
@@ -68,6 +81,7 @@ def register(request):
             })
             email = EmailMessage(mail_subject, message, to=[form.cleaned_data.get('email')])
             if email.send():
+                messages.success(request, "Activation email sent successfully")
                 return redirect('home')
     else:
         form = RegistrationForm()
@@ -75,12 +89,11 @@ def register(request):
     return render(request, 'register.html', {'form': form})
 
 
-@login_required(redirect_field_name='login', login_url='login')
 def activate(request, uidb64, token):
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
         user = CustomUser.objects.get(pk=uid)
-    except:
+    except:  # add exeptions
         user = None
 
     if user is not None and default_token_generator.check_token(user, token):
@@ -88,8 +101,11 @@ def activate(request, uidb64, token):
         user.is_email_verified = True
         user.save()
 
+        default_group, _ = Group.objects.get_or_create(name='Default')
+        default_group.user_set.add(user)
+
         messages.success(request, 'You activated your account successfully')
-        return redirect('home')  # make it to login
+        return redirect('login')  # make it to login
     else:
         messages.error(request, 'Your activation link is invalid')
 
@@ -125,4 +141,23 @@ def login_user(request):
 @login_required(redirect_field_name='login', login_url='login')
 def logout_user(request):
     logout(request)
+    return redirect('home')
+
+
+@user_passes_test(is_superuser)
+def add_video_view(request):
+    if request.method == 'POST':
+        form = AddVideoForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Successfully added video")
+            return redirect('home')
+    else:
+        form = AddVideoForm()
+
+    return render(request, 'add_video.html', {'form': form})
+
+
+def custom_404(request, exception):
     return redirect('home')

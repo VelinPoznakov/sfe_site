@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Video{% endblock %}
+
+
+{% block content %}
+    
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <form action="{% url 'add-video' %}" method="post" enctype="multipart/form-data" class="mx-auto"  style="width: 100%;">
+                    <h1>Add Video</h1>
+                    {% csrf_token %}
+
+                    {{ form.name }}
+                    {% if form.name.errors %}
+                        <div class="text-danger">{{ form.name.errors.0 }}</div>
+                    {% endif %}
+
+                    {{ form.video.label_tag }}
+                    {{ form.video }}
+                    {% if form.video.errors %}
+                        <div class="text-danger">{{ form.video.errors.0 }}</div>
+                    {% endif %}<br>
+
+                    <button type="submit" class="btn btn-primary">Upload</button>
+                    <a href="{% url 'home' %}" class="btn btn-primary">Back</a>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -4,15 +4,36 @@
 
 {% block content %}
 
-  {% if messages %}
-    {% for message in messages %}
-      <div class="alert alert-success alert-dismissible fade show" role="alert">
-          {{ message }}
-          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      </div>
-    {% endfor %}
-  {% endif %}
 
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+        {% endfor %}
+    {% endif %}
 
+    {% if video_url %}
+        <div class="container mt-5">
+            <h1 class="text-center mb-4">{{ video.name }}</h1>
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <!-- Responsive video -->
+                    <div class="ratio ratio-16x9 shadow-lg">
+                        <video controls autoplay>
+                            <source src="{{ video_url }}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="container text-center mt-5">
+            <p class="lead">No video to display</p>
+        </div>
+    {% endif %}
 
+    
 {% endblock %}

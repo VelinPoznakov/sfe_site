@@ -45,6 +45,11 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'support' %}"><strong>Support</strong></a>
                 </li>
+                {% if request.user.is_superuser %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'add-video' %}"><strong>Add Video</strong></a>
+                </li>
+                {% endif %}
             </ul>
     
             <ul class="navbar-nav ms-auto">

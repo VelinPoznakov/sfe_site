@@ -9,20 +9,35 @@ class CustomUser(AbstractUser):
     is_email_verified = models.BooleanField(default=False)
     date_time_added = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return self.username
+
 
 class SupportModel(models.Model):
     name = models.CharField(max_length=80)
     email = models.EmailField(max_length=200)
     phone_number = PhoneNumberField()
     comment_field = models.CharField(max_length=1000)
+    date_created = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
 
 
-# class AddVideo(models.Model):
-#     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-#     name = models.CharField(max_length=50, null=False, blank=False)
-#     video = models.FileField(null=False, blank=False)
-#     comment = models.TextField(max_length=400, blank=True, null=True)
-#     date_time_added = models.DateTimeField(auto_now_add=True)
+class AddVideoModel(models.Model):
+    name = models.CharField(max_length=30)
+    video = models.FileField(upload_to='videos/')
+    date_added = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+
+
+
+
+
+
+
     
     
 
