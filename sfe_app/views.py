@@ -1,5 +1,6 @@
 from django.contrib.auth.models import Group
 from django.core.mail import EmailMessage
+from django.db.models import Q
 from sfe_app.forms import *
 from django.contrib import messages
 from django.shortcuts import render, redirect
@@ -27,6 +28,7 @@ def home(request):
         'video': video  # Pass the video object to use other attributes like 'name'
     }
     return render(request, 'home.html', context)
+
 
 def about(request):
     return render(request, 'about.html')
@@ -69,6 +71,7 @@ def register(request):
         if form.is_valid():
             user = form.save(commit=False)
             user.is_active = False
+            user.email = user.email.lower()
             user.save()
 
             mail_subject = "Activate you account"
@@ -161,3 +164,73 @@ def add_video_view(request):
 
 def custom_404(request, exception):
     return redirect('home')
+
+
+def email_to_send(request):
+    if request.method == 'POST':
+        form = EnterMailChangePassword(request.POST)
+        if form.is_valid():
+            user_email = form.cleaned_data['email'].lower()
+            associated_user = get_user_model().objects.filter(Q(email=user_email)).first()
+
+            if associated_user:
+                mail_subject = "Activate you account"
+                message = render_to_string("reset_password_send.html", {
+                    'user': associated_user,
+                    'domain': get_current_site(request).domain,
+                    'uid': urlsafe_base64_encode(force_bytes(associated_user.pk)),
+                    'token': default_token_generator.make_token(associated_user),
+                    'protocol': 'https' if request.is_secure() else 'http'
+                })
+                email = EmailMessage(mail_subject, message, to=[associated_user.email])
+                if email.send():
+                    messages.success(request, "Change password email sent successfully")
+                else:
+                    messages.error(request, 'Error while sending an email')
+                return redirect('home')
+
+    else:
+        form = EnterMailChangePassword()
+
+    return render(request, 'email_change_password.html', {'form': form})
+
+
+def change_password(request, uidb64, token):
+    User = get_user_model()
+
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = CustomUser.objects.get(pk=uid)
+    except:
+        user = None
+
+    if user is not None and default_token_generator.check_token(user, token):
+        if request.method == 'POST':
+            form = ResetPasswordForm(user, request.POST)
+            if form.is_valid():
+                form.save()
+                messages.success(request, "Your password has been reset successfully")
+                return redirect('login')
+        else:
+            form = ResetPasswordForm(user)
+
+        return render(request, 'reset_password.html', {
+            'form': form,
+            'uidb64': uidb64,
+            'token': token,
+        })
+
+    else:
+        messages.error(request, 'Your activation link is invalid')
+
+    return redirect('home')
+
+
+@login_required(login_url='login')
+def user_profile(request, pk):
+    if request.user.pk == pk:
+        user = CustomUser.objects.get(pk=pk)
+        return render(request, 'user_profile.html', {'user': user})
+    else:
+        return redirect('home')
+

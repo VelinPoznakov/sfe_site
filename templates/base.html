@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{% endblock %}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
     <style>
 
-        .navbar-dark .navbar-nav .nav-link,
-        .navbar-dark {
+        .nav-link {
             color: #ffffff !important;
         }
 
@@ -33,46 +33,85 @@
     
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
+            
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'home' %}"><strong>Home</strong></a>
+                    <a class="nav-link" href="{% url 'home' %}">
+                        <i class="bi bi-house"></i> <strong>Home</strong>
+                    </a>
                 </li>
+            
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'about-us' %}"><strong>About Us</strong></a>
+                    <a class="nav-link" href="{% url 'about-us' %}">
+                        <i class="bi bi-building"></i> <strong>About Us</strong>
+                    </a>
                 </li>
+            
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'contact-us' %}"><strong>Contact Us</strong></a>
+                    <a class="nav-link" href="{% url 'contact-us' %}">
+                        <i class="bi bi-envelope"></i> <strong>Contact Us</strong>
+                    </a>
                 </li>
+            
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'support' %}"><strong>Support</strong></a>
+                    <a class="nav-link" href="{% url 'support' %}">
+                        <i class="bi bi-info-circle"> </i><strong>Support</strong>
+                    </a>
                 </li>
+            
                 {% if request.user.is_superuser %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'add-video' %}"><strong>Add Video</strong></a>
+                    <a class="nav-link" href="{% url 'add-video' %}">
+                        <i class="bi bi-plus-lg"></i> <strong>Add Video</strong>
+                    </a>
                 </li>
+                    
                 {% endif %}
             </ul>
     
             <ul class="navbar-nav ms-auto">
+            
                 {% if user.is_authenticated %}
+                    
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'logout' %}"><strong>Log Out</strong></a>
+                        <a class="nav-link" href="{% url 'user-profile' pk=user.pk %}">
+                            <i class="bi bi-file-person"></i> <strong>My Profile</strong>
+                        </a>
                     </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">
+                            <i class="bi bi-box-arrow-in-left"></i> <strong>Log Out</strong>
+                        </a>
+                    </li>
+                    
                 {% else %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'register' %}"><strong>Register</strong></a>
+                        <a class="nav-link" href="{% url 'register' %}">
+                            <i class="bi bi-person"></i> <strong>Register</strong>
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'login' %}"><strong>Log In</strong></a>
+                        <a class="nav-link" href="{% url 'login' %}">
+                            <i class="bi bi-box-arrow-in-right"></i> <strong>Log In</strong>
+                        </a>
                     </li>
                 {% endif %}
+            
             </ul>
         </div>
     </nav>
 
-  <main class="flex-grow-1">
-    {% block content %}
-    {% endblock %}
-  </main>
+    <main class="flex-grow-1">
+        {% block content %}
+        {% endblock %}
+    </main>
+    <br>
+    
+    <footer class="footer text-center mt-auto py-sm-3 bg-dark">
+        <div class="container">
+            <span class="text-white">© 2024 Your Website Name. All rights reserved.</span>
+        </div>
+    </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>

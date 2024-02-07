@@ -14,6 +14,9 @@ urlpatterns = [
   path('login/', views.login_user, name='login'),
   path('logout/', views.logout_user, name='logout'),
   path('add-video/', views.add_video_view, name='add-video'),
+  path('email-send/', views.email_to_send, name='email-send'),
+  path('change-password/<uidb64>/<token>/', views.change_password, name='reset-password-email'),
+  path('profile/<int:pk>/', views.user_profile, name='user-profile'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
