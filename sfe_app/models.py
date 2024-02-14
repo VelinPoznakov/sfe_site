@@ -10,7 +10,7 @@ class CustomUser(AbstractUser):
     date_time_added = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
-        self.email = self.email.lower()  # Convert email to lowercase before saving
+        self.email = self.email.lower()
         super(CustomUser, self).save(*args, **kwargs)
 
     def __str__(self):

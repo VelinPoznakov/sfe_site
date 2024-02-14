@@ -3,6 +3,25 @@
 {% block title %}{{ user.username }}'s Profile{% endblock %}
 
 {% block content %}
-    <h1>{{ user.username }}</h1>
+<div class="container">
+    <div class="card text-center text-bg-primary border-danger" style="width: 20em;">
+        <div class="card-body">
+            <!-- Username and Edit Button -->
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h4 class="card-text mb-0">{{ user.username }}</h4>
+                <a class="btn btn-secondary" href="{% url 'change-username' pk=user.pk %}">Edit</a>
+            </div>
+            <!-- Email and Edit Button -->
+            <div class="d-flex justify-content-between align-items-center">
+                <h4 class="card-text mb-0">{{ user.email }}</h4>
+                <a class="btn btn-secondary" href="{% url 'change-email' pk=user.pk %}">Edit</a>
+            </div>
+            <div class="d-flex justify-content-between align-items-center">
+                <a class="btn btn-secondary" href="{% url 'change-password-profile' pk=user.pk %}">dddd</a>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
+
 

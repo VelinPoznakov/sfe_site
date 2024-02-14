@@ -1,5 +1,6 @@
 from django.contrib.auth.models import Group
-from django.core.mail import EmailMessage
+from django.core.mail import EmailMessage, send_mail
+from django.core.mail.backends import smtp
 from django.db.models import Q
 from sfe_app.forms import *
 from django.contrib import messages
@@ -15,17 +16,13 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
 
 
-# Create your views here.
-
-
 def home(request):
-    video = AddVideoModel.objects.last()  # This will be None if no videos exist
-    # Check if video exists and it has an associated file by checking the name attribute
+    video = AddVideoModel.objects.last()
     video_url = video.video.url if video and video.video.name else None
 
     context = {
         'video_url': video_url,
-        'video': video  # Pass the video object to use other attributes like 'name'
+        'video': video
     }
     return render(request, 'home.html', context)
 
@@ -70,7 +67,6 @@ def register(request):
         form = RegistrationForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
-            user.is_active = False
             user.email = user.email.lower()
             user.save()
 
@@ -83,9 +79,10 @@ def register(request):
                 'protocol': 'https' if request.is_secure() else 'http'
             })
             email = EmailMessage(mail_subject, message, to=[form.cleaned_data.get('email')])
-            if email.send():
+            if email.send(fail_silently=False):
                 messages.success(request, "Activation email sent successfully")
                 return redirect('home')
+
     else:
         form = RegistrationForm()
 
@@ -100,7 +97,6 @@ def activate(request, uidb64, token):
         user = None
 
     if user is not None and default_token_generator.check_token(user, token):
-        user.is_active = True
         user.is_email_verified = True
         user.save()
 
@@ -108,7 +104,7 @@ def activate(request, uidb64, token):
         default_group.user_set.add(user)
 
         messages.success(request, 'You activated your account successfully')
-        return redirect('login')  # make it to login
+        return redirect('login')
     else:
         messages.error(request, 'Your activation link is invalid')
 
@@ -234,3 +230,97 @@ def user_profile(request, pk):
     else:
         return redirect('home')
 
+
+@login_required(login_url='login')
+def resend_email_activation(request, pk):
+    user = CustomUser.objects.get(pk=pk)
+    if not user.is_authenticated:
+        return redirect('login')
+
+    if request.method == "POST":
+        form = EmailChangeForm(request.POST)
+
+        if form.is_valid():
+            email = form.cleaned_data["email"]
+
+            if email.lower() != user.email:
+                user.email = email.lower()
+                user.save()
+
+            mail_subject = "Activate you account email"
+            message = render_to_string("account_activation_email.html", {
+                'user': user.username,
+                'domain': get_current_site(request).domain,
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                'token': default_token_generator.make_token(user),
+                'protocol': 'https' if request.is_secure() else 'http'
+            })
+            email = EmailMessage(mail_subject, message, to=[user.email])
+            if email.send(fail_silently=False):
+                messages.success(request, "Activation email sent successfully")
+                return redirect('home')
+
+    else:
+        form = EmailChangeForm()
+
+        return render(request, 'ver_email_send.html', {'form': form})
+
+
+def change_username(request, pk):
+    user = CustomUser.objects.get(pk=pk)
+    
+    if request.method == 'POST':
+        form = ChangeUsername(request.POST)
+        
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            user.username = username
+            user.save()
+            messages.success(request, f'Your username has been changed successfully to {username}')
+            return redirect('home')
+        
+    else:
+        form = ChangeUsername()
+        
+    return render(request, 'change_username.html', {'form': form})
+
+
+def change_email(request, pk):
+    user = CustomUser.objects.get(pk=pk)
+    
+    if request.method == 'POST':
+        form = EmailChangeForm(request.POST)
+        
+        if form.is_valid():
+            email = form.cleaned_data.get('email').lower()
+            user.email = email
+            user.save()
+            messages.success(request, f'You email has been changed successfully to {email}')
+            return redirect('home')
+        
+    else:
+        form = EmailChangeForm()
+        
+    return render(request, 'email_change.html', {'form': form})
+
+
+def change_password(request, pk):
+    user = CustomUser.objects.get(pk=pk)
+    
+    if request.method == 'POST':
+        form = ResetPasswordForm(user, request.POST)
+        
+        if form.is_valid():
+            print('dsadasd')
+            new_password = form.cleaned_data['new_password1']
+            user.set_password(new_password)
+            user.save()
+            logout(request)
+            messages.success(request, 'Password changed successfully.')
+            return redirect('login')          
+    else:
+        form = ResetPasswordForm(user)
+        
+    return render(request, 'change_password.html', {'form': form, 'user': user})
+
+            

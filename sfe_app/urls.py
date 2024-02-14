@@ -17,6 +17,10 @@ urlpatterns = [
   path('email-send/', views.email_to_send, name='email-send'),
   path('change-password/<uidb64>/<token>/', views.change_password, name='reset-password-email'),
   path('profile/<int:pk>/', views.user_profile, name='user-profile'),
+  path('email-verification-send/<int:pk>/', views.resend_email_activation, name='resend-email-activation'),
+  path('change-usename/<int:pk>/', views.change_username, name='change-username'),
+  path('change-email/<int:pk>/', views.change_email, name='change-email'),
+  path('change-password-pr/<int:pk>/', views.change_password, name='change-password-profile')
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

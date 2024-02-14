@@ -4,6 +4,7 @@
 
 {% block content %}
 
+
     {% if messages %}
         {% for message in messages %}
             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -12,22 +13,13 @@
               </div>
         {% endfor %}
     {% endif %}
-    
-
-    {% if request.user.is_authenticated %}
-        {% if not request.user.is_email_verified %}
-            <div class="alert alert-info" role="alert">
-                If you do not receive an email for email activation click <a href="{% url 'resend-email-activation' pk=user.pk %}">here</a>
-            </div>
-        {% endif %}
-    {% endif %}
-
 
     {% if video_url %}
         <div class="container mt-5">
             <h1 class="text-center mb-4">{{ video.name }}</h1>
             <div class="row justify-content-center">
                 <div class="col-lg-8">
+                    <!-- Responsive video -->
                     <div class="ratio ratio-16x9 shadow-lg">
                         <video controls autoplay>
                             <source src="{{ video_url }}" type="video/mp4">
@@ -43,6 +35,5 @@
         </div>
     {% endif %}
 
-
-
+    
 {% endblock %}

@@ -268,3 +268,41 @@ class EnterMailChangePassword(forms.Form):
             self.add_error('email', "You should enter an email")
 
         return email
+
+class EmailChangeForm(forms.Form):
+    email = forms.CharField(label='', required=False, widget=forms.EmailInput(attrs={
+        'class': 'form-control', 'placeholder': 'Enter an email'
+    }))
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email', '').lower()
+        if not email:
+            raise ValidationError("You must enter an email.")
+        return email
+
+
+class ChangeUsername(forms.Form):
+    username = forms.CharField(label='', required=False, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your new username'}))
+    
+    def clean_username(self):
+        username = self.cleaned_data['username']
+        
+        not_allowed_symbols = ['', '!', '\"', "\'", '#', '%', '@', ',', '$', '^', '&', '*', '(', ')', '-', '=', '_',
+                               '~', '+', '`', '<', '>', '?', '[', ']', '{', '}', ':', ';', '|']
+
+        if CustomUser.objects.filter(username=username).exists():
+            self.add_error('username', 'This username already exists')
+        
+        if not username or username is None:
+            self.add_error('username', 'You should enter username')
+
+        for el in username:
+            if el in not_allowed_symbols:
+                self.add_error('username', f'You cannot use {el}')
+                break
+
+        if len(username) < 5:
+            self.add_error('username', 'You username must be at least 5 characters')
+            
+        return username
+    
